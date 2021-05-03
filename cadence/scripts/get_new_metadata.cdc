@@ -1,4 +1,4 @@
-import Collectible from 0xf8d6e0586b0a20c7
+import Collectible from 0x6f48f852926e137a
 
 pub fun main(addr: Address): [{String: String}] {
     var newMetadataURIs: [{String: String}] = []

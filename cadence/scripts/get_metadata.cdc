@@ -1,4 +1,4 @@
-import Collectible from 0xf8d6e0586b0a20c7
+import Collectible from 0x6f48f852926e137a
 
 pub fun main(addr: Address, ids: [UInt64]): [{String: String}] {
     var metadataArray: [{String: String}] = []
@@ -10,10 +10,23 @@ pub fun main(addr: Address, ids: [UInt64]): [{String: String}] {
     for id in ids {
         let token = collection.borrowCollectible(id: id)
         let metadataURIs = token.getMetadataURIs()
-        metadataArray.append({
-            "id": id.toString(),
-            "metadataURI": metadataURIs[metadataURIs.length - 1]
-        })
+        let maintainer = getAccount(token.minter).getCapability<&{Collectible.CollectibleMaintainerPublic}>(Collectible.MaintainerPublicPath).borrow()!
+        let newMetadataURI = maintainer.getProposingMetadataURI(id: id)
+        if (newMetadataURI != nil) {
+            metadataArray.append({
+                "id": id.toString(),
+                "metadataURI": metadataURIs[metadataURIs.length - 1],
+                "newMetadataURI": newMetadataURI!,
+                "minter": token.minter.toString()
+            })
+        } else {
+            metadataArray.append({
+                "id": id.toString(),
+                "metadataURI": metadataURIs[metadataURIs.length - 1],
+                "newMetadataURI": "",
+                "minter": token.minter.toString()
+            })
+        }
     }
     return metadataArray
 }
