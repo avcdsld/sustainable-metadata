@@ -139,7 +139,7 @@ export default function Item() {
   const migrateToEthereumNFT = async (event) => {
     event.preventDefault();
     try {
-      const metadataURIForEthereumNFT = 'bafybeichuklshbakivb7nyhj5w74xql4xs4ejss22g3sblhyzs7t5fef54';
+      const metadataURIForEthereumNFT = await uploadMetadataForEthereumNFT();
 
       const resultTransferNFT = await flow.transferNFTForMigration(id);
       if (resultTransferNFT.errorMessage) throw new Error(resultTransferNFT.errorMessage);

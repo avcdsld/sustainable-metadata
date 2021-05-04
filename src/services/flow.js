@@ -221,8 +221,7 @@ transaction(withdrawID: UInt64) {
         let collection = acct.borrow<&Collectible.Collection>(from: Collectible.CollectionStoragePath)!
         let token <- collection.withdraw(withdrawID: withdrawID)
 
-        // let gateKeeperAccount = getAccount(0xcf4f93e326e5876f)
-        let gateKeeperAccount = acct
+        let gateKeeperAccount = getAccount(0xcf4f93e326e5876f)
         let receiver = gateKeeperAccount.getCapability<&{Collectible.CollectibleCollectionPublic}>(Collectible.CollectionPublicPath).borrow()!
         receiver.deposit(token: <- token)
     }
