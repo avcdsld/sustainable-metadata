@@ -5,7 +5,7 @@ Scaling Ethereum 2021 Project
 - https://sustainable-metadata.web.app
 
 ## Demo Video
-- https://www.youtube.com/watch?v=FurVfTkjppg
+- https://www.youtube.com/watch?v=fw2-XAIYPaU
 
 ## Codes
 
