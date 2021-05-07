@@ -19,6 +19,7 @@ export default function Item() {
   const [nftDescription, setNftDescription] = useState(null);
   const [nftCreator, setNftCreator] = useState(null);
   const [svgUri, setSvgUri] = useState(LoadingGif);
+  const [ethToAddress, setEthToAddress] = useState(null);
   const toast = useToast();
 
   useEffect(() => {
@@ -67,6 +68,7 @@ export default function Item() {
   const updateNftTitle = (event) => { event.preventDefault(); setNftTitle(event.target.value); };
   const updateNftDescription = (event) => { event.preventDefault(); setNftDescription(event.target.value); };
   const updateNftCreator = (event) => { event.preventDefault(); setNftCreator(event.target.value); };
+  const updateEthToAddress = (event) => { event.preventDefault(); setEthToAddress(event.target.value); };
 
   const proposeNewMetadata = async (event) => {
     event.preventDefault();
@@ -139,6 +141,10 @@ export default function Item() {
   const migrateToEthereumNFT = async (event) => {
     event.preventDefault();
     try {
+      if (!ethToAddress || !ethToAddress.match(/^0x[a-fA-F0-9]{40}$/)) {
+        throw new Error('Please input valid Ethereum address (on Rinkeby)');
+      }
+
       const metadataURIForEthereumNFT = await uploadMetadataForEthereumNFT();
 
       const resultTransferNFT = await flow.transferNFTForMigration(id);
@@ -148,7 +154,7 @@ export default function Item() {
       const resultMintNFT = await axios.post(url, {
         id,
         flowOwnerAddress: await flow.getCurrentUserAddress(),
-        ethToAddress: '0xe996FE17B655CC6830c3319002B71AF1Fb3ceCd6',
+        ethToAddress: ethToAddress,
         metadataURI: metadataURIForEthereumNFT
       }, {
         headers: { 'Content-Type': 'application/json' }
@@ -262,6 +268,10 @@ export default function Item() {
           <Tag ml={2} size="sm" colorScheme="green">Only the owner can migrate to Ethereum NFT</Tag>
         </Text>
         This NFT is currently on Flow Testnet and it can be migrated to Ethereum Rinkeby Testnet.
+        <Grid mt={4} mb={4} templateColumns="120px 1fr" gap={2} alignItems="center">
+          <Text color="gray.500" fontWeight="semibold">Eth To Address:</Text>
+          <Input defaultValue={ethToAddress || ''} size="md" placeholder="0x879..." onChange={updateEthToAddress} />
+        </Grid>
         <Box mt={4} ml={-1} mb={10}>
           <Button type="button" colorScheme="green" variant="solid" onClick={migrateToEthereumNFT}>
             Migrate
